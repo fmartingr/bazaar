@@ -5,15 +5,20 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"net/url"
 
 	"github.com/fmartingr/bazaar/pkg/manager"
-	"github.com/fmartingr/bazaar/pkg/shop/akira"
+	"github.com/fmartingr/bazaar/pkg/shop/akiracomics"
+	"github.com/fmartingr/bazaar/pkg/shop/amazon"
+	"github.com/fmartingr/bazaar/pkg/shop/heroesdepapel"
+	"github.com/fmartingr/bazaar/pkg/shop/steam"
 )
 
 func main() {
 	m := manager.NewManager()
-	m.Register(akira.Domains, akira.NewAkiraShopFactory())
+	m.Register(akiracomics.Domains, akiracomics.NewAkiraShopFactory())
+	m.Register(steam.Domains, steam.NewSteamShopFactory())
+	m.Register(heroesdepapel.Domains, heroesdepapel.NewHeroesDePapelShopFactory())
+	m.Register(amazon.Domains, amazon.NewAmazonShopFactory())
 
 	http.HandleFunc("/item", func(rw http.ResponseWriter, r *http.Request) {
 		if err := r.ParseForm(); err != nil {
@@ -21,18 +26,7 @@ func main() {
 			return
 		}
 
-		itemUrl, err := url.Parse(r.PostForm.Get("url"))
-		if err != nil {
-			rw.WriteHeader(400)
-			return
-		}
-
-		shop := m.Get(itemUrl.Host)
-		if shop == nil {
-			rw.WriteHeader(400)
-			return
-		}
-		product, err := shop.Get(itemUrl.String())
+		product, err := m.Retrieve(r.PostForm.Get("url"))
 		if err != nil {
 			rw.WriteHeader(500)
 			return
@@ -43,6 +37,8 @@ func main() {
 		rw.Header().Add("Content-Type", "application/json")
 		rw.Write(payload)
 	})
+
+	log.Println("starting server")
 
 	if err := http.ListenAndServe(":5001", http.DefaultServeMux); err != nil {
 		log.Printf("Error: %s", err)

@@ -2,20 +2,17 @@ package manager
 
 import (
 	"fmt"
+	"net/url"
 
 	"github.com/fmartingr/bazaar/pkg/models"
-	"github.com/gocolly/colly"
 )
 
 type Manager struct {
-	domains          map[string]models.Shop
-	collectorOptions []func(*colly.Collector)
+	domains map[string]models.Shop
 }
 
 func (m *Manager) Register(domains []string, shopFactory models.ShopFactory) error {
-	options := m.collectorOptions
-	options = append(options, colly.AllowedDomains(domains...))
-	shop := shopFactory(options)
+	shop := shopFactory()
 
 	for _, domain := range domains {
 		if _, exists := m.domains[domain]; exists {
@@ -28,20 +25,30 @@ func (m *Manager) Register(domains []string, shopFactory models.ShopFactory) err
 	return nil
 }
 
-func (m *Manager) Get(host string) models.Shop {
+func (m *Manager) GetShop(host string) models.Shop {
 	shop, exists := m.domains[host]
 	if !exists {
 		return nil
 	}
-
 	return shop
+}
+
+func (m *Manager) Retrieve(productURL string) (*models.Product, error) {
+	itemUrl, err := url.Parse(productURL)
+	if err != nil {
+		return nil, fmt.Errorf("error parsing url: %s", err)
+	}
+
+	shop := m.GetShop(itemUrl.Host)
+	if shop == nil {
+		return nil, fmt.Errorf("shop not found for domain")
+	}
+
+	return shop.Get(productURL)
 }
 
 func NewManager() Manager {
 	return Manager{
-		collectorOptions: []func(*colly.Collector){
-			colly.UserAgent("bazaar/0.0.1"),
-		},
 		domains: make(map[string]models.Shop),
 	}
 }
