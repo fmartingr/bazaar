@@ -24,6 +24,7 @@ var priceSelectors = []string{
 	"#buybox span.a-color-price",
 	"#tp_price_block_total_price_ww",
 	"#price",
+	".priceToPay .a-offscreen",
 }
 
 var releaseDateLayoutByDomain = map[string]string{
@@ -46,30 +47,23 @@ func (s *AmazonShop) Get(url string) (*models.Product, error) {
 		return nil, fmt.Errorf("error parsing body: %s", err)
 	}
 
-	log.Println(doc.Text())
-
-	log.Printf("len(nodes) = %d", len(doc.Nodes))
-	log.Printf("len(nodes.children) = %d", len(doc.Children().Nodes))
-
 	product := models.Product{
 		URL: url,
 	}
 
 	var tentativePrice string
 	for _, selector := range priceSelectors {
-		tentativePrice = doc.Find(selector).First().Text()
+		tentativePrice = strings.TrimSpace(doc.Find(selector).First().Text())
+		log.Printf("%s = %s", selector, tentativePrice)
 		if tentativePrice != "" {
-			break
-		}
-	}
-
-	if tentativePrice != "" {
-		priceNum, err := strconv.ParseFloat(utils.ExtractPrice(tentativePrice), 64)
-		if err != nil {
-			log.Println(err)
-		} else {
-			product.PriceText = tentativePrice
-			product.Price = priceNum
+			priceNum, err := strconv.ParseFloat(utils.ExtractPrice(tentativePrice), 64)
+			if err != nil {
+				log.Println(err)
+			} else {
+				product.PriceText = tentativePrice
+				product.Price = priceNum
+				break
+			}
 		}
 	}
 
