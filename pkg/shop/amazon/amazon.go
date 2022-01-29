@@ -54,7 +54,6 @@ func (s *AmazonShop) Get(url string) (*models.Product, error) {
 	var tentativePrice string
 	for _, selector := range priceSelectors {
 		tentativePrice = strings.TrimSpace(doc.Find(selector).First().Text())
-		log.Printf("%s = %s", selector, tentativePrice)
 		if tentativePrice != "" {
 			priceNum, err := strconv.ParseFloat(utils.ExtractPrice(tentativePrice), 64)
 			if err != nil {
