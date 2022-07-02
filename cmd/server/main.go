@@ -9,6 +9,7 @@ import (
 	"github.com/fmartingr/bazaar/pkg/manager"
 	"github.com/fmartingr/bazaar/pkg/shop/akiracomics"
 	"github.com/fmartingr/bazaar/pkg/shop/amazon"
+	"github.com/fmartingr/bazaar/pkg/shop/gtmstore"
 	"github.com/fmartingr/bazaar/pkg/shop/heroesdepapel"
 	"github.com/fmartingr/bazaar/pkg/shop/steam"
 )
@@ -19,6 +20,7 @@ func main() {
 	m.Register(steam.Domains, steam.NewSteamShopFactory())
 	m.Register(heroesdepapel.Domains, heroesdepapel.NewHeroesDePapelShopFactory())
 	m.Register(amazon.Domains, amazon.NewAmazonShopFactory())
+	m.Register(gtmstore.Domains, gtmstore.NewGTMStoreShopFactory())
 
 	http.HandleFunc("/item", func(rw http.ResponseWriter, r *http.Request) {
 		if err := r.ParseForm(); err != nil {

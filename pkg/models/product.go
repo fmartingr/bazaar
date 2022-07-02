@@ -4,6 +4,7 @@ import "time"
 
 type Product struct {
 	Name        string     `json:"name"`
+	Description string     `json:"description"`
 	URL         string     `json:"url"`
 	ImageURL    string     `json:"image_url"`
 	InStock     bool       `json:"in_stock"`
