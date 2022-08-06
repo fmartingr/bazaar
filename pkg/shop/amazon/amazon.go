@@ -17,6 +17,7 @@ import (
 var Domains = []string{"www.amazon.es", "www.amazon.com"}
 
 type AmazonShop struct {
+	models.ShopOptions
 	domains []string
 }
 
@@ -97,9 +98,10 @@ func (s *AmazonShop) Get(url string) (*models.Product, error) {
 }
 
 func NewAmazonShopFactory() models.ShopFactory {
-	return func() models.Shop {
+	return func(shopOptions models.ShopOptions) models.Shop {
 		shop := AmazonShop{
-			domains: Domains,
+			ShopOptions: shopOptions,
+			domains:     Domains,
 		}
 		return &shop
 	}

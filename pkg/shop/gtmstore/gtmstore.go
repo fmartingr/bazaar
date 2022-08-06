@@ -15,6 +15,7 @@ import (
 var Domains = []string{"www.gtm-store.com"}
 
 type GTMStoreShop struct {
+	models.ShopOptions
 	domains []string
 }
 
@@ -62,9 +63,10 @@ func (s *GTMStoreShop) Get(url string) (*models.Product, error) {
 }
 
 func NewGTMStoreShopFactory() models.ShopFactory {
-	return func() models.Shop {
+	return func(shopOptions models.ShopOptions) models.Shop {
 		shop := GTMStoreShop{
-			domains: Domains,
+			ShopOptions: shopOptions,
+			domains:     Domains,
 		}
 		return &shop
 	}

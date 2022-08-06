@@ -3,7 +3,6 @@ package casadellibro
 import (
 	"fmt"
 	"log"
-	"net/http"
 	"regexp"
 	"strconv"
 	"strings"
@@ -21,21 +20,19 @@ const (
 var Domains = []string{"www.casadellibro.com"}
 
 type CasaDelLibroShop struct {
+	models.ShopOptions
+
 	domains     []string
 	priceRegexp *regexp.Regexp
 }
 
 func (s *CasaDelLibroShop) Get(url string) (*models.Product, error) {
-	res, err := http.Get(url)
+	body, err := s.ShopOptions.Client.Get(url)
 	if err != nil {
-		return nil, fmt.Errorf("error retrieving url: %s", err)
+		return nil, fmt.Errorf("error during request: %s", err)
 	}
 
-	if res.StatusCode != 200 {
-		return nil, fmt.Errorf("error retrieving url: %d %s", res.StatusCode, res.Status)
-	}
-
-	doc, err := goquery.NewDocumentFromReader(res.Body)
+	doc, err := goquery.NewDocumentFromReader(body)
 	if err != nil {
 		return nil, fmt.Errorf("error parsing body: %s", err)
 	}
@@ -88,13 +85,14 @@ func (s *CasaDelLibroShop) Get(url string) (*models.Product, error) {
 }
 
 func NewCasaDelLibroShopFactory() models.ShopFactory {
-	return func() models.Shop {
+	return func(shopOptions models.ShopOptions) models.Shop {
 		r, err := regexp.Compile(`Price\"\:\"([\d+\.]+)`)
 		if err != nil {
 			log.Println(err)
 		}
 
 		shop := CasaDelLibroShop{
+			ShopOptions: shopOptions,
 			domains:     Domains,
 			priceRegexp: r,
 		}

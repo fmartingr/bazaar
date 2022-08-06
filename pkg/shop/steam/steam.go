@@ -14,6 +14,7 @@ import (
 var Domains = []string{"store.steampowered.com"}
 
 type SteamShop struct {
+	models.ShopOptions
 	domains []string
 }
 
@@ -60,9 +61,10 @@ func (s *SteamShop) Get(url string) (*models.Product, error) {
 }
 
 func NewSteamShopFactory() models.ShopFactory {
-	return func() models.Shop {
+	return func(shopOptions models.ShopOptions) models.Shop {
 		shop := SteamShop{
-			domains: Domains,
+			ShopOptions: shopOptions,
+			domains:     Domains,
 		}
 		return &shop
 	}

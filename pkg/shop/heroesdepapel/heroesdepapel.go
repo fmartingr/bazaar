@@ -13,6 +13,7 @@ import (
 var Domains = []string{"www.heroesdepapel.es"}
 
 type HeroesDePapelShop struct {
+	models.ShopOptions
 	domains []string
 }
 
@@ -60,9 +61,10 @@ func (s *HeroesDePapelShop) Get(url string) (*models.Product, error) {
 }
 
 func NewHeroesDePapelShopFactory() models.ShopFactory {
-	return func() models.Shop {
+	return func(shopOptions models.ShopOptions) models.Shop {
 		shop := HeroesDePapelShop{
-			domains: Domains,
+			ShopOptions: shopOptions,
+			domains:     Domains,
 		}
 		return &shop
 	}

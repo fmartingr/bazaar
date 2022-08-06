@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/url"
 
+	"github.com/fmartingr/bazaar/pkg/clients"
 	"github.com/fmartingr/bazaar/pkg/models"
 )
 
@@ -14,7 +15,8 @@ type Manager struct {
 }
 
 func (m *Manager) Register(domains []string, shopFactory models.ShopFactory) error {
-	shop := shopFactory()
+	baseShop := models.NewShopOptions(clients.NewBasicHttpClient())
+	shop := shopFactory(baseShop)
 
 	for _, domain := range domains {
 		if _, exists := m.domains[domain]; exists {
