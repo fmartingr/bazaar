@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -30,6 +31,12 @@ func main() {
 
 		product, err := m.Retrieve(r.PostForm.Get("url"))
 		if err != nil {
+			if errors.Is(err, manager.ErrShopNotFound) {
+				rw.WriteHeader(400)
+				return
+			}
+
+			log.Printf("error for url %s: %s", r.PostForm.Get("url"), err)
 			rw.WriteHeader(500)
 			return
 		}

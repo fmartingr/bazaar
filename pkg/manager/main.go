@@ -7,6 +7,8 @@ import (
 	"github.com/fmartingr/bazaar/pkg/models"
 )
 
+var ErrShopNotFound = fmt.Errorf("shop not found for domain")
+
 type Manager struct {
 	domains map[string]models.Shop
 }
@@ -41,7 +43,7 @@ func (m *Manager) Retrieve(productURL string) (*models.Product, error) {
 
 	shop := m.GetShop(itemUrl.Host)
 	if shop == nil {
-		return nil, fmt.Errorf("shop not found for domain")
+		return nil, ErrShopNotFound
 	}
 
 	return shop.Get(productURL)
