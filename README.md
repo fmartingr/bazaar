@@ -25,6 +25,7 @@ Support is handled in a _best effort_ basis. Some sites do not provided all expo
 - [Amazon.es](https://amazon.es)
 - [Amazon.com](https://amazon.com)
 - [Akira Comics](https://www.akiracomics.com)
+- [Casa del libro](https://www.casadellibro.com)
 - [Heroes De Papel](https://heroesdepapel.es)
 - [Steam](https://store.steampowered.com)
 
