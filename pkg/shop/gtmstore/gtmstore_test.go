@@ -21,8 +21,6 @@ func TestGtmStore_Ok(t *testing.T) {
 		return
 	}
 
-	t.Log(product)
-
 	assert.NotEmpty(t, product.Description)
 	assert.Equal(t, "Metroid: Misión Omega", product.Name)
 	assert.Equal(t, "https://www.gtm-store.com/wp-content/uploads/2022/07/GTM-Metroid-4.jpeg", product.ImageURL)
