@@ -5,9 +5,11 @@ import (
 	"io"
 	"net/url"
 
-	"github.com/fmartingr/bazaar/pkg/clients/mockdata"
+	"github.com/fmartingr/bazaar/internal/mockdata"
 )
 
+// MockClient A simple client used for test the shops which will load an HTML from the mockdata present
+// in this same package based on the requested host.
 type MockClient struct{}
 
 func (c MockClient) Get(urlString string) (io.Reader, error) {
