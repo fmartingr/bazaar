@@ -34,7 +34,7 @@ func (s *SteamShop) Get(u *url.URL) (*models.Product, error) {
 	}
 
 	doc.Find(`.page_content_ctn`).Each(func(i int, s *goquery.Selection) {
-		priceText := strings.TrimSpace(s.Find(`.game_purchase_action .price`).Text())
+		priceText := strings.TrimSpace(s.Find(`.game_purchase_action .price`).First().Text())
 		priceValue, _ := s.Find(`.game_purchase_price.price`).Attr("data-price-final")
 		priceNum, _ := strconv.ParseFloat(strings.ReplaceAll(strings.Split(priceValue, " ")[0], ",", "."), 64)
 		// TODO: error logging
@@ -42,7 +42,7 @@ func (s *SteamShop) Get(u *url.URL) (*models.Product, error) {
 		imgURL, _ := s.Find("img.game_header_image_full").Attr("src")
 		// TODO: error logging
 
-		product.Name = s.Find("#appHubAppName").Text()
+		product.Name = strings.TrimSpace(s.Find("#appHubAppName").Text())
 		product.InStock = len(s.Find(".game_area_comingsoon").Nodes) == 0
 		product.ImageURL = imgURL
 		product.PriceText = priceText
