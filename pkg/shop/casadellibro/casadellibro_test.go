@@ -22,7 +22,7 @@ func TestCasaDelLibro_Ok(t *testing.T) {
 		return
 	}
 
-	assert.Greater(t, 100, len(product.Description))
+	assert.NotEmpty(t, product.Description)
 	assert.Equal(t, "LA DEPENDIENTA", product.Name)
 	assert.Equal(t, "https://imagessl0.casadellibro.com/a/l/t5/20/9788416634620.jpg", product.ImageURL)
 	assert.Equal(t, 15.96, product.Price)
