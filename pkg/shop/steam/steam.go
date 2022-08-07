@@ -34,7 +34,7 @@ func (s *SteamShop) Get(u *url.URL) (*models.Product, error) {
 	}
 
 	doc.Find(`.page_content_ctn`).Each(func(i int, s *goquery.Selection) {
-		priceText := strings.TrimSpace(s.Find(`.game_purchase_action .price`).Text())
+		priceText := strings.TrimSpace(s.Find(`.game_purchase_action .price`).First().Text())
 		priceValue, _ := s.Find(`.game_purchase_price.price`).Attr("data-price-final")
 		priceNum, _ := strconv.ParseFloat(strings.ReplaceAll(strings.Split(priceValue, " ")[0], ",", "."), 64)
 		// TODO: error logging
