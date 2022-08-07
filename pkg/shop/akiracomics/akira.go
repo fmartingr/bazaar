@@ -2,7 +2,6 @@ package akiracomics
 
 import (
 	"fmt"
-	"net/http"
 	"strconv"
 	"strings"
 	"time"
@@ -19,22 +18,26 @@ type AkiraShop struct {
 }
 
 func (s *AkiraShop) Get(url string) (*models.Product, error) {
-	res, err := http.Get(url)
+	body, err := s.ShopOptions.Client.Get(url)
 	if err != nil {
-		return nil, fmt.Errorf("error retrieving url: %s", err)
-	}
-	defer res.Body.Close()
-	if res.StatusCode != 200 {
-		return nil, fmt.Errorf("error retrieving url: %d %s", res.StatusCode, res.Status)
+		return nil, fmt.Errorf("error during request: %s", err)
 	}
 
-	doc, err := goquery.NewDocumentFromReader(res.Body)
+	doc, err := goquery.NewDocumentFromReader(body)
 	if err != nil {
 		return nil, fmt.Errorf("error parsing body: %s", err)
 	}
 
+	description, err := doc.Find(`[itemprop="description"]`).Html()
+	if err != nil {
+		// TODO error logging
+	} else {
+		description = strings.Replace(description, "<br/>", "\n", -1)
+	}
+
 	product := models.Product{
-		URL: url,
+		URL:         url,
+		Description: description,
 	}
 
 	doc.Find(`div.panel-ficha-producto div.panel-grupo`).Each(func(i int, s *goquery.Selection) {
