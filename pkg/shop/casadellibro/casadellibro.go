@@ -3,6 +3,7 @@ package casadellibro
 import (
 	"fmt"
 	"log"
+	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
@@ -26,8 +27,8 @@ type CasaDelLibroShop struct {
 	priceRegexp *regexp.Regexp
 }
 
-func (s *CasaDelLibroShop) Get(url string) (*models.Product, error) {
-	body, err := s.ShopOptions.Client.Get(url)
+func (s *CasaDelLibroShop) Get(u *url.URL) (*models.Product, error) {
+	body, err := s.ShopOptions.Client.Get(u)
 	if err != nil {
 		return nil, fmt.Errorf("error during request: %s", err)
 	}
@@ -38,7 +39,7 @@ func (s *CasaDelLibroShop) Get(url string) (*models.Product, error) {
 	}
 
 	product := models.Product{
-		URL: url,
+		URL: u.String(),
 	}
 
 	// Price

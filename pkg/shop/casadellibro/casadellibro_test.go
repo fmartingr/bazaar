@@ -1,6 +1,7 @@
 package casadellibro_test
 
 import (
+	"net/url"
 	"testing"
 	"time"
 
@@ -13,7 +14,7 @@ import (
 func TestCasaDelLibro_Ok(t *testing.T) {
 	shop := casadellibro.NewCasaDelLibroShopFactory()(models.NewShopOptions(clients.NewMockClient()))
 
-	testUrl := "https://www.casadellibro.com/test/"
+	testUrl, _ := url.Parse("https://www.casadellibro.com/test/")
 
 	product, err := shop.Get(testUrl)
 	if err != nil {
@@ -27,5 +28,5 @@ func TestCasaDelLibro_Ok(t *testing.T) {
 	assert.Equal(t, 15.96, product.Price)
 	assert.Equal(t, "15.96", product.PriceText)
 	assert.Equal(t, "2019-01-01T00:00:00Z", product.ReleaseDate.Format(time.RFC3339))
-	assert.Equal(t, testUrl, product.URL)
+	assert.Equal(t, testUrl.String(), product.URL)
 }

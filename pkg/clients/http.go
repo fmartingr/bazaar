@@ -4,14 +4,15 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 )
 
 type HttpClient struct {
 	http http.Client
 }
 
-func (c HttpClient) Get(url string) (io.Reader, error) {
-	res, err := c.http.Get(url)
+func (c HttpClient) Get(u *url.URL) (io.Reader, error) {
+	res, err := c.http.Get(u.String())
 	if err != nil {
 		return nil, fmt.Errorf("error retrieving url: %s", err)
 	}

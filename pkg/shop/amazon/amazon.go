@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 
@@ -33,23 +33,19 @@ var releaseDateLayoutByDomain = map[string]string{
 	Domains[1]: "January 2, 2006",
 }
 
-func (s *AmazonShop) Get(url string) (*models.Product, error) {
-	res, err := http.Get(url)
+func (s *AmazonShop) Get(u *url.URL) (*models.Product, error) {
+	body, err := s.ShopOptions.Client.Get(u)
 	if err != nil {
-		return nil, fmt.Errorf("error retrieving url: %s", err)
-	}
-	defer res.Body.Close()
-	if res.StatusCode != 200 {
-		return nil, fmt.Errorf("error retrieving url: %d %s", res.StatusCode, res.Status)
+		return nil, fmt.Errorf("error during request: %s", err)
 	}
 
-	doc, err := goquery.NewDocumentFromReader(res.Body)
+	doc, err := goquery.NewDocumentFromReader(body)
 	if err != nil {
 		return nil, fmt.Errorf("error parsing body: %s", err)
 	}
 
 	product := models.Product{
-		URL: url,
+		URL: u.String(),
 	}
 
 	var tentativePrice string
@@ -69,11 +65,14 @@ func (s *AmazonShop) Get(url string) (*models.Product, error) {
 
 	product.Name = strings.TrimSpace(doc.Find("#productTitle").Text())
 
-	imagesJSON, _ := doc.Find("#main-image-container img").Attr("data-a-dynamic-image")
-	// TODO: error handling
+	imagesJSON, exists := doc.Find("#main-image-container img").Attr("data-a-dynamic-image")
+	if !exists {
+		log.Printf("Can't find image for %s", u.String())
+	}
 	var images map[string]interface{}
-	json.Unmarshal([]byte(imagesJSON), &images)
-	// TODO: error handling
+	if err := json.Unmarshal([]byte(imagesJSON), &images); err != nil {
+		log.Printf("error unmarshalling: %s", err)
+	}
 	var lastImage string
 	for key := range images {
 		lastImage = key
@@ -84,7 +83,7 @@ func (s *AmazonShop) Get(url string) (*models.Product, error) {
 	if len(releaseDateElement.Nodes) > 0 {
 		releaseDateRaw := releaseDateElement.Parent().Parent().Find(".rpi-attribute-value").Text()
 
-		releaseDate, err := utils.ParseReleaseDate(releaseDateLayoutByDomain[res.Request.URL.Host], strings.TrimSpace(releaseDateRaw), monday.LocaleEsES)
+		releaseDate, err := utils.ParseReleaseDate(releaseDateLayoutByDomain[u.Host], strings.TrimSpace(releaseDateRaw), monday.LocaleEsES)
 		if err != nil {
 			log.Println(err)
 		} else {

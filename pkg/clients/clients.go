@@ -1,7 +1,10 @@
 package clients
 
-import "io"
+import (
+	"io"
+	"net/url"
+)
 
 type Client interface {
-	Get(url string) (io.Reader, error)
+	Get(u *url.URL) (io.Reader, error)
 }

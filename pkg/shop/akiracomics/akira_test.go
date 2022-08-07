@@ -1,6 +1,7 @@
 package akiracomics_test
 
 import (
+	"net/url"
 	"testing"
 
 	"github.com/fmartingr/bazaar/pkg/clients"
@@ -12,7 +13,7 @@ import (
 func TestAkiraComics_Ok(t *testing.T) {
 	shop := akiracomics.NewAkiraShopFactory()(models.NewShopOptions(clients.NewMockClient()))
 
-	testUrl := "https://www.akiracomics.com/test/"
+	testUrl, _ := url.Parse("https://www.akiracomics.com/test/")
 
 	product, err := shop.Get(testUrl)
 	if err != nil {
@@ -27,5 +28,5 @@ func TestAkiraComics_Ok(t *testing.T) {
 	assert.Equal(t, "https://www.akiracomics.com/imagenes/poridentidad?identidad=24552a54-365d-4d31-a73e-9fd5f927c3a0&ancho=900&alto=", product.ImageURL)
 	assert.Equal(t, 8.55, product.Price)
 	assert.Equal(t, "8,55 €", product.PriceText)
-	assert.Equal(t, testUrl, product.URL)
+	assert.Equal(t, testUrl.String(), product.URL)
 }

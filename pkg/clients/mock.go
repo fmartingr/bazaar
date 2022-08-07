@@ -12,15 +12,10 @@ import (
 // in this same package based on the requested host.
 type MockClient struct{}
 
-func (c MockClient) Get(urlString string) (io.Reader, error) {
-	parsedUrl, err := url.Parse(urlString)
+func (c MockClient) Get(u *url.URL) (io.Reader, error) {
+	f, err := mockdata.Data.Open(u.Host + ".html")
 	if err != nil {
-		return nil, fmt.Errorf("error parsing url: %s", urlString)
-	}
-
-	f, err := mockdata.Data.Open(parsedUrl.Host + ".html")
-	if err != nil {
-		return nil, fmt.Errorf("can't open mock data for %s", parsedUrl.Host)
+		return nil, fmt.Errorf("can't open mock data for %s", u.Host)
 	}
 
 	return f, nil

@@ -48,7 +48,7 @@ func (m *Manager) Retrieve(productURL string) (*models.Product, error) {
 		return nil, ErrShopNotFound
 	}
 
-	return shop.Get(productURL)
+	return shop.Get(itemUrl)
 }
 
 func NewManager() Manager {

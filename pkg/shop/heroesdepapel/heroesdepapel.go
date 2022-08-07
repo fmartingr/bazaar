@@ -2,7 +2,7 @@ package heroesdepapel
 
 import (
 	"fmt"
-	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 
@@ -17,23 +17,19 @@ type HeroesDePapelShop struct {
 	domains []string
 }
 
-func (s *HeroesDePapelShop) Get(url string) (*models.Product, error) {
-	res, err := http.Get(url)
+func (s *HeroesDePapelShop) Get(u *url.URL) (*models.Product, error) {
+	body, err := s.ShopOptions.Client.Get(u)
 	if err != nil {
-		return nil, fmt.Errorf("error retrieving url: %s", err)
-	}
-	defer res.Body.Close()
-	if res.StatusCode != 200 {
-		return nil, fmt.Errorf("error retrieving url: %d %s", res.StatusCode, res.Status)
+		return nil, fmt.Errorf("error during request: %s", err)
 	}
 
-	doc, err := goquery.NewDocumentFromReader(res.Body)
+	doc, err := goquery.NewDocumentFromReader(body)
 	if err != nil {
 		return nil, fmt.Errorf("error parsing body: %s", err)
 	}
 
 	product := models.Product{
-		URL: url,
+		URL: u.String(),
 	}
 
 	doc.Find(".section-product-details").Each(func(i int, s *goquery.Selection) {

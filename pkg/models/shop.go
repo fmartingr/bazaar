@@ -1,11 +1,15 @@
 package models
 
-import "github.com/fmartingr/bazaar/pkg/clients"
+import (
+	"net/url"
+
+	"github.com/fmartingr/bazaar/pkg/clients"
+)
 
 type ShopFactory func(baseShop ShopOptions) Shop
 
 type Shop interface {
-	Get(url string) (*Product, error)
+	Get(*url.URL) (*Product, error)
 }
 
 type ShopOptions struct {
