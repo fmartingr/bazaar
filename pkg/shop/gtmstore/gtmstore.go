@@ -2,7 +2,6 @@ package gtmstore
 
 import (
 	"fmt"
-	"log"
 	"net/url"
 	"strconv"
 	"strings"
@@ -42,7 +41,6 @@ func (s *GTMStoreShop) Get(u *url.URL) (*models.Product, error) {
 		s.Find(".woocommerce-product-gallery__wrapper div").Each(func(i int, s *goquery.Selection) {
 			imageURL, exists := s.Find("a").Attr("href")
 			if exists {
-				log.Println(imageURL)
 				imageURLs = append(imageURLs, imageURL)
 			}
 		})
