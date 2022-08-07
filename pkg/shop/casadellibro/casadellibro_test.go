@@ -21,11 +21,11 @@ func TestCasaDelLibro_Ok(t *testing.T) {
 		return
 	}
 
-	assert.Greater(t, len(product.Description), 100)
-	assert.Equal(t, product.Name, "LA DEPENDIENTA")
-	assert.Equal(t, product.ImageURL, "https://imagessl0.casadellibro.com/a/l/t5/20/9788416634620.jpg")
-	assert.Equal(t, product.Price, 15.96)
-	assert.Equal(t, product.PriceText, "15.96")
-	assert.Equal(t, product.ReleaseDate.Format(time.RFC3339), "2019-01-01T00:00:00Z")
-	assert.Equal(t, product.URL, testUrl)
+	assert.Greater(t, 100, len(product.Description))
+	assert.Equal(t, "LA DEPENDIENTA", product.Name)
+	assert.Equal(t, "https://imagessl0.casadellibro.com/a/l/t5/20/9788416634620.jpg", product.ImageURL)
+	assert.Equal(t, 15.96, product.Price)
+	assert.Equal(t, "15.96", product.PriceText)
+	assert.Equal(t, "2019-01-01T00:00:00Z", product.ReleaseDate.Format(time.RFC3339))
+	assert.Equal(t, testUrl, product.URL)
 }
