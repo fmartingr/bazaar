@@ -8,7 +8,7 @@ builds:
       - linux
       - windows
       - darwin
-    main: ./cmd/server
+    main: ./cmd/bazaar
 archives:
   - replacements:
       darwin: macos
