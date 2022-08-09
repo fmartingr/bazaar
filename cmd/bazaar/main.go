@@ -1,6 +1,8 @@
 package main
 
 import (
+	"context"
+
 	"github.com/fmartingr/bazaar/internal/server"
 	"github.com/fmartingr/bazaar/pkg/manager"
 	"github.com/fmartingr/bazaar/pkg/shop/akiracomics"
@@ -20,11 +22,11 @@ func main() {
 	m.Register(gtmstore.Domains, gtmstore.NewGTMStoreShopFactory())
 	m.Register(casadellibro.Domains, casadellibro.NewCasaDelLibroShopFactory())
 
-	server := server.NewServer(server.ServerConf{
-		HttpPort: 8080,
-	}, &m)
+	ctx := context.Background()
 
-	server.Start()
+	server := server.NewServer(server.ParseServerConfiguration(ctx), &m)
+
+	server.Start(ctx)
 
 	server.WaitStop()
 }
