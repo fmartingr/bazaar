@@ -1,0 +1,20 @@
+name: "Pull Request"
+
+on:
+  pull_request:
+    branches:
+      - latest
+
+concurrency:
+  group: ci-tests-${{ github.ref }}-1
+  cancel-in-progress: true
+
+jobs:
+  go-versions:
+    uses: ./.github/workflows/_go-versions.yml
+  call-lint:
+    uses: ./.github/workflows/_golangci-lint.yml
+  call-build:
+    uses: ./.github/workflows/_build.yml
+  call-test:
+    uses: ./.github/workflows/_test.yml
