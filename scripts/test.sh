@@ -8,6 +8,7 @@ fi
 
 COVERAGE_PATH=coverage.out
 COVERAGE_HTML_PATH=coverage.html
+CGO_ENABLED=1 # Used for -race
 
 go test ${TEST_OPTIONS} ${SOURCE_FILES} -timeout=${TEST_TIMEOUT}
 
