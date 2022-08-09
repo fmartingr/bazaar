@@ -1,0 +1,32 @@
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    main: ./cmd/server
+archives:
+  - replacements:
+      darwin: macos
+      linux: linux
+      windows: windows
+      386: i386
+      amd64: x86_64
+source:
+  enabled: true
+  name_template: "{{ .ProjectName }}-{{ .Version }}-sources"
+  format: "tar.gz"
+checksum:
+  name_template: "checksums.txt"
+snapshot:
+  name_template: "{{ .Tag }}-dev"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
