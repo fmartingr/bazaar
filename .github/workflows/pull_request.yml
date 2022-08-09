@@ -16,5 +16,11 @@ jobs:
     uses: ./.github/workflows/_golangci-lint.yml
   call-build:
     uses: ./.github/workflows/_build.yml
+    needs: go-versions
+    with:
+      go_versions: ${{ needs.go-versions.outputs.go_versions }}
   call-test:
     uses: ./.github/workflows/_test.yml
+    needs: go-versions
+    with:
+      go_versions: ${{ needs.go-versions.outputs.go_versions }}

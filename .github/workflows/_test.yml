@@ -1,14 +1,19 @@
 name: "Unit Tests"
 
-on: workflow_call
+on:
+  workflow_call:
+    inputs:
+      go_versions:
+        type: string
+        description: Go versions to run workflow on
+        required: true
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    needs: go-versions
     strategy:
       matrix:
-        go_version: ${{ fromJSON(needs.go-versions.outputs.matrix) }}
+        go_version: ${{ fromJSON(inputs.go_versions) }}
     name: Go ${{ matrix.go_version }} unit tests
     steps:
       - uses: actions/checkout@v2

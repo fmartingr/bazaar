@@ -1,6 +1,11 @@
 name: Go
 
-on: workflow_call
+on:
+  workflow_call:
+    outputs:
+      go_versions:
+        description: "The golang version matrix"
+        value: ${{ jobs.go-versions.outputs.matrix }}
 
 jobs:
   go-versions:
