@@ -18,8 +18,5 @@ LABEL maintainer="Felipe Martin <github@fmartingr.com>"
 COPY --from=builder /src/build/bazaar /usr/bin/
 COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
-# RUN addgroup -g 1000 bazaar \
-#  && adduser -D -h /bazaar -g '' -G bazaar -u 1000 bazaar
-# USER bazaar
-EXPOSE ${PORT}
+
 ENTRYPOINT ["/usr/bin/bazaar"]
