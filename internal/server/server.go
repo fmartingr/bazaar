@@ -36,17 +36,17 @@ func (s *Server) Start(ctx context.Context) error {
 	return nil
 }
 
-func (s *Server) WaitStop() error {
+func (s *Server) WaitStop() {
 	signals := make(chan os.Signal, 1)
 	signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM)
 
 	sig := <-signals
 	log.Printf("signal %s received, shutting down", sig)
 
-	return s.Stop()
+	s.Stop()
 }
 
-func (s *Server) Stop() error {
+func (s *Server) Stop() {
 	s.cancel()
 
 	shuwdownContext, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -57,8 +57,6 @@ func (s *Server) Stop() error {
 			log.Fatalf("error shutting down http server: %s", err)
 		}
 	}
-
-	return nil
 }
 
 func NewServer(conf *ServerConfig, m *manager.Manager) *Server {

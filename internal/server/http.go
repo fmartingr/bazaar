@@ -50,7 +50,9 @@ func NewHttpServer(port int, m *manager.Manager) *httpServer {
 		payload, _ := json.Marshal(product)
 
 		rw.Header().Add("Content-Type", "application/json")
-		rw.Write(payload)
+		if _, err := rw.Write(payload); err != nil {
+			log.Printf("error writting response: %s", err)
+		}
 	})
 
 	mux.HandleFunc("/liveness", func(w http.ResponseWriter, r *http.Request) {

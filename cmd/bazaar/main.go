@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"log"
 
 	"github.com/fmartingr/bazaar/internal/server"
 	"github.com/fmartingr/bazaar/pkg/manager"
@@ -26,7 +27,9 @@ func main() {
 
 	server := server.NewServer(server.ParseServerConfiguration(ctx), &m)
 
-	server.Start(ctx)
+	if err := server.Start(ctx); err != nil {
+		log.Panicf("error starting server: %s", err)
+	}
 
 	server.WaitStop()
 }

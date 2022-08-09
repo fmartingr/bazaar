@@ -14,19 +14,15 @@ type Manager struct {
 	domains map[string]models.Shop
 }
 
-func (m *Manager) Register(domains []string, shopFactory models.ShopFactory) error {
+func (m *Manager) Register(domains []string, shopFactory models.ShopFactory) {
 	baseShop := models.NewShopOptions(clients.NewBasicHttpClient())
 	shop := shopFactory(baseShop)
 
 	for _, domain := range domains {
-		if _, exists := m.domains[domain]; exists {
-			return fmt.Errorf("domain %s is already registered", domain)
-		} else {
+		if _, exists := m.domains[domain]; !exists {
 			m.domains[domain] = shop
 		}
 	}
-
-	return nil
 }
 
 func (m *Manager) GetShop(host string) models.Shop {
