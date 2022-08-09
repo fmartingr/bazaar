@@ -1,22 +1,46 @@
-PROJECT := bazaar
+PROJECT_NAME := bazaar
+
+GOLANG_VERSION=1.19
+
 VERSION_COMMIT := $git rev-parse --short HEAD)
 SOURCE_FILES ?=./internal/... ./cmd/... ./pkg/...
+
 TEST_OPTIONS ?= -v -failfast -race -bench=. -benchtime=100000x -cover -coverprofile=coverage.out
 TEST_TIMEOUT ?=1m
+
 CLEAN_OPTIONS ?=-modcache -testcache
+
 LD_FLAGS := -X main.version=$(VERSION) -s -w
+CGO_ENABLED := 0
+
 BUILDS_PATH := ./build
 FROM_MAKEFILE := y
+
+CONTAINER_RUNTIME := podman
+CONTAINERFILE_NAME := Containerfile
+CONTAINER_GOLANG_VERSION := ${GOLANG_VERSION}
+CONTAINER_ALPINE_VERSION := 3.16
+CONTAINER_IMAGE_NAME := fmartingr/${PROJECT_NAME}
+CONTAINER_IMAGE_TAG := dev
 
 # Common exports
 export FROM_MAKEFILE
 export VERSION_COMMIT
 
 export LD_FLAGS
+export CGO_ENABLED
+
 export SOURCE_FILES
 export TEST_OPTIONS
 export TEST_TIMEOUT
 export BUILDS_PATH
+
+export CONTAINER_RUNTIME
+export CONTAINERFILE_NAME
+export CONTAINER_GOLANG_VERSION
+export CONTAINER_ALPINE_VERSION
+export CONTAINER_IMAGE_NAME
+export CONTAINER_IMAGE_TAG
 
 .PHONY: all
 all: help
@@ -45,6 +69,11 @@ build: clean ### builds the project for the setup os/arch combinations
 	$(info: Make: Build)
 	@go build -a -v -ldflags "${LD_FLAGS}" -o ${BUILDS_PATH}/bazaar ./cmd/bazaar/*.go
 	@chmod +x ${BUILDS_PATH}/bazaar
+
+.PHONY: build-container-image
+build-container:
+	$(info: Make: Container image)
+	@bash scripts/build-container-image.sh
 
 .PHONY: quick-run
 quick-run: ### Executes the project using golang
