@@ -1,0 +1,16 @@
+name: goreleaser
+
+on:
+  push:
+    branches: [latest]
+    tags: ["v*"]
+
+permissions:
+  contents: write # Required to upload dist files
+
+jobs:
+  goreleaser:
+    uses: .github/workflows/_goreleaser.yml
+  docker-buildx:
+    needs: goreleaser
+    uses: .github/workflows/_docker-buildx.yml

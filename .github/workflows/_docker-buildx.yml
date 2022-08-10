@@ -1,0 +1,34 @@
+name: "Build Docker"
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  buildx:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    name: Build Docker
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: dist
+
+      - name: Buildx
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login -u "${{ github.repository_owner }}" --password-stdin ghcr.io
+          REPOSITORY=ghcr.io/${{ github.repository }}
+
+          TAG=latest
+          if [ -z "$(git tag --points-at HEAD)" ]
+          then
+            TAG="dev"
+          fi
+
+          CONTAINER_BUILDX_OPTIONS="--push --output=type=registry --tag $REPOSITORY:$(git describe --tags) --tag $REPOSITORY:$TAG" make buildx
+          docker buildx build -f Dockerfile.ci --platform=linux/amd64,arm64,linux/arm/v7 --push --output=type=registry --tag $REPO:$TAG --tag $REPO:$TAG2 .
