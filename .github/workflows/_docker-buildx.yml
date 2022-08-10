@@ -15,9 +15,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: dist
+          path: dist
 
       - name: Buildx
         run: |
@@ -31,4 +32,3 @@ jobs:
           fi
 
           CONTAINER_BUILDX_OPTIONS="--push --output=type=registry --tag $REPOSITORY:$(git describe --tags) --tag $REPOSITORY:$TAG" make buildx
-          docker buildx build -f Dockerfile.ci --platform=linux/amd64,arm64,linux/arm/v7 --push --output=type=registry --tag $REPO:$TAG --tag $REPO:$TAG2 .

@@ -62,7 +62,7 @@ build: clean ### builds the project for the setup os/arch combinations
 	@goreleaser build --rm-dist --snapshot
 
 .PHONY: buildx
-buildx: build
+buildx:
 	$(info: Make: Buildx)
 	@bash scripts/buildx.sh
 
