@@ -8,12 +8,24 @@ builds:
       - linux
       - windows
       - darwin
-    main: ./cmd/server
+    goarch:
+      - amd64
+      - arm64
+      - arm
+    goarm:
+      - 6
+      - 7
+    ignore:
+      - goos: windows
+        goarch: arm
+      - goos: windows
+        goarch: arm64
+    main: ./cmd/bazaar
+    ldflags:
+      - -s -w
 archives:
   - replacements:
       darwin: macos
-      linux: linux
-      windows: windows
       386: i386
       amd64: x86_64
 source:

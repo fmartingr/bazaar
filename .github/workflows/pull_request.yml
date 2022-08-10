@@ -6,7 +6,7 @@ on:
       - latest
 
 concurrency:
-  group: ci-tests-${{ github.ref }}-1
+  group: ci-pull-request-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
