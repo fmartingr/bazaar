@@ -4,6 +4,9 @@ on:
   push:
     branches: [latest]
     tags: ["v*"]
+  pull_request:
+    branches:
+      - latest
 
 permissions:
   contents: write # Required to upload dist files
