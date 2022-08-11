@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "bazaar.fullname" . }}
+  labels:
+    {{- include "bazaar.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.app.http.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "bazaar.selectorLabels" . | nindent 4 }}
