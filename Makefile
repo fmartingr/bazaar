@@ -13,7 +13,7 @@ BUILDS_PATH := ./dist
 FROM_MAKEFILE := y
 
 CONTAINER_RUNTIME := podman
-CONTAINERFILE_NAME := Containerfile
+CONTAINERFILE_NAME := Dockerfile
 CONTAINER_ALPINE_VERSION := 3.16
 
 BUILDX_PLATFORMS := linux/amd64,arm64,linux/arm/v7
