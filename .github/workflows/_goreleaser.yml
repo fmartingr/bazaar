@@ -3,12 +3,11 @@ name: goreleaser
 on:
   workflow_call:
 
-permissions:
-  contents: write # Required to upload dist files
-
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Required to upload dist files
     steps:
       - name: Checkout
         uses: actions/checkout@v2

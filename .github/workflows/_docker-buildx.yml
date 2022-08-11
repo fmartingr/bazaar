@@ -7,6 +7,9 @@ on:
 jobs:
   buildx:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read # Required to read dist files (and repository)
+      packages: write # Required to push packages to GHCR
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     name: Build Docker
@@ -20,15 +23,18 @@ jobs:
           name: dist
           path: dist
 
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+
       - name: Buildx
         run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login -u "${{ github.repository_owner }}" --password-stdin ghcr.io
           REPOSITORY=ghcr.io/${{ github.repository }}
 
-          TAG=latest
+          TAG_COMMIT=$(git describe --tag)
+          TAG_MAIN=latest
           if [ -z "$(git tag --points-at HEAD)" ]
           then
-            TAG="dev"
+          TAG_MAIN="dev"
           fi
 
-          CONTAINER_BUILDX_OPTIONS="--push --output=type=registry --tag $REPOSITORY:$(git describe --tags) --tag $REPOSITORY:$TAG" make buildx
+          CONTAINER_BUILDX_OPTIONS="--push --output=type=registry --tag $REPOSITORY:$TAG_COMMIT --tag $REPOSITORY:$TAG_MAIN" make buildx

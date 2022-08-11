@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -ex
 
 if [ -z "$FROM_MAKEFILE" ]; then
     echo "Do not call this file directly - use the make command"
