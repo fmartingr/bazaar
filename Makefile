@@ -59,7 +59,7 @@ clean: ###  clean test cache, build files
 .PHONY: build
 build: clean ### builds the project for the setup os/arch combinations
 	$(info: Make: Build)
-	@goreleaser build --rm-dist --snapshot
+	@goreleaser build --clean --snapshot
 
 .PHONY: buildx
 buildx:

@@ -13,8 +13,8 @@ builds:
       - arm64
       - arm
     goarm:
-      - 6
-      - 7
+      - "6"
+      - "7"
     ignore:
       - goos: windows
         goarch: arm
@@ -24,10 +24,15 @@ builds:
     ldflags:
       - -s -w
 archives:
-  - replacements:
-      darwin: macos
-      386: i386
-      amd64: x86_64
+  - rlcp: true
+    name_template: >-
+      {{ .ProjectName }}-
+      {{ .Version }}
+      {{ .Os }}-
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "darwin" }}macos
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
 source:
   enabled: true
   name_template: "{{ .ProjectName }}-{{ .Version }}-sources"
