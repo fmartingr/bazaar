@@ -1,4 +1,5 @@
 PROJECT_NAME := bazaar
+GOLANG_VERSION := $(shell head -n 3 go.mod | tail -n 1 | cut -d " " -f 2)
 
 SOURCE_FILES ?=./internal/... ./cmd/... ./pkg/...
 
@@ -19,6 +20,8 @@ CONTAINER_ALPINE_VERSION := 3.19
 BUILDX_PLATFORMS := linux/amd64,arm64,linux/arm/v7
 
 # Common exports
+export GOLANG_VERSION
+
 export FROM_MAKEFILE
 
 export CGO_ENABLED
@@ -62,7 +65,7 @@ build: clean ### builds the project for the setup os/arch combinations
 	@goreleaser build --clean --snapshot
 
 .PHONY: buildx
-buildx:
+buildx: build
 	$(info: Make: Buildx)
 	@bash scripts/buildx.sh
 

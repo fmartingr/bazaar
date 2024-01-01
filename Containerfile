@@ -1,7 +1,8 @@
 # Build stage
 ARG ALPINE_VERSION
+ARG GOLANG_VERSION
 
-FROM docker.io/library/alpine:${ALPINE_VERSION} AS builder
+FROM ghcr.io/ghcri/golang:${GOLANG_VERSION}-alpine${ALPINE_VERSION} AS builder
 ARG TARGETARCH
 ARG TARGETOS
 ARG TARGETVARIANT
