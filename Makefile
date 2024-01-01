@@ -64,8 +64,9 @@ build: clean ### builds the project for the setup os/arch combinations
 	$(info: Make: Build)
 	@goreleaser build --clean --snapshot
 
+# Only used in CI, assumes the build process has already been run
 .PHONY: buildx
-buildx: build
+buildx:
 	$(info: Make: Buildx)
 	@bash scripts/buildx.sh
 
