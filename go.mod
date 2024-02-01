@@ -4,8 +4,8 @@ go 1.21
 
 require (
 	github.com/PuerkitoBio/goquery v1.8.1
-	github.com/goodsign/monday v1.0.1
-	github.com/sethvargo/go-envconfig v0.9.0
+	github.com/goodsign/monday v1.0.2
+	github.com/sethvargo/go-envconfig v1.0.0
 	github.com/stretchr/testify v1.8.4
 )
 
