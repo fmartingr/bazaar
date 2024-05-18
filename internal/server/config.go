@@ -56,7 +56,10 @@ func ParseServerConfiguration(ctx context.Context) *ServerConfig {
 		envconfig.PrefixLookuper("BAZAAR_", envconfig.OsLookuper()),
 		envconfig.OsLookuper(),
 	)
-	if err := envconfig.ProcessWith(ctx, &cfg, lookuper); err != nil {
+	if err := envconfig.Process(ctx, envconfig.Config{
+		Target:   &cfg,
+		Lookuper: lookuper,
+	}); err != nil {
 		log.Fatalf("Error parsing configuration: %s", err)
 	}
 
