@@ -7,7 +7,7 @@ toolchain go1.22.3
 require (
 	github.com/PuerkitoBio/goquery v1.9.2
 	github.com/goodsign/monday v1.0.2
-	github.com/sethvargo/go-envconfig v1.0.2
+	github.com/sethvargo/go-envconfig v1.0.3
 	github.com/stretchr/testify v1.9.0
 )
 
